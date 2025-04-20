@@ -1,183 +1,366 @@
 ﻿using System;
+using System.Collections.Generic;
 using Plants;
 using Lab12;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lab12Test
 {
-
     [TestClass]
     public class MyListTests
     {
         [TestMethod]
         public void Add_ValidPlant_SetsBegData()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-
-            // Act
-            list.Add(plant); // Добавляем растение
-
-            // Assert
-            Assert.IsNotNull(list.beg); // Проверяем, что beg не null
-            Assert.IsNotNull(list.beg.Data); // Проверяем, что данные не null
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            Assert.IsNotNull(list.beg);
         }
-
-
 
         [TestMethod]
-        public void Add_ValidPlant_ClonesData()
+        public void Add_ValidPlant_IncreasesCount()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-
-            // Act
-            list.Add(plant); // Добавляем растение
-
-            // Assert
-            Assert.IsNotNull(list.beg); // Проверяем, что beg не null
-            Assert.AreNotSame(plant, list.beg.Data); // Проверяем, что данные склонированы
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            Assert.AreEqual(1, list.Count);
         }
+
         [TestMethod]
         public void Remove_ExistingPlant_DecreasesCount()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-            list.Add(plant); // Добавляем растение
-
-            // Act
-            list.Remove(plant); // Удаляем растение
-
-            // Assert
-            Assert.AreEqual(0, list.Count); // Проверяем, что счетчик уменьшился
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            list.Remove(plant);
+            Assert.AreEqual(0, list.Count);
         }
 
         [TestMethod]
         public void Remove_NonExistingPlant_ReturnsFalse()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-
-            // Act
-            bool result = list.Remove(plant); // Пытаемся удалить
-
-            // Assert
-            Assert.IsFalse(result); // Проверяем, что удаление не удалось
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            bool result = list.Remove(plant);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void RemoveByName_ExistingName_RemovesElement()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-            list.Add(plant); // Добавляем растение
-
-            // Act
-            list.RemoveByName("TestPlant"); // Удаляем по имени
-
-            // Assert
-            Assert.AreEqual(0, list.Count); // Проверяем, что элемент удален
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            int result = list.RemoveByName("TestPlant");
+            Assert.AreEqual(1, result);
         }
 
         [TestMethod]
-        public void RemoveByName_NonExistingName_KeepsCount()
+        public void RemoveByName_NonExistingName_ReturnsZero()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-            list.Add(plant); // Добавляем растение
-
-            // Act
-            list.RemoveByName("OtherPlant"); // Удаляем несуществующее имя
-
-            // Assert
-            Assert.AreEqual(1, list.Count); // Проверяем, что счетчик не изменился
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            int result = list.RemoveByName("OtherPlant");
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
         public void AddKToStart_ValidK_IncreasesCount()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-
-            // Act
-            list.AddKToStart(3); // Добавляем 3 элемента
-
-            // Assert
-            Assert.AreEqual(3, list.Count); // Проверяем, что счетчик увеличился
+            MyList<Plant> list = new MyList<Plant>();
+            list.AddKToStart(3);
+            Assert.AreEqual(3, list.Count);
         }
 
         [TestMethod]
         public void AddKToStart_ZeroK_KeepsCount()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-
-            // Act
-            list.AddKToStart(0); // Добавляем 0 элементов
-
-            // Assert
-            Assert.AreEqual(0, list.Count); // Проверяем, что счетчик не изменился
+            MyList<Plant> list = new MyList<Plant>();
+            list.AddKToStart(0);
+            Assert.AreEqual(0, list.Count);
         }
 
         [TestMethod]
         public void DeepCopyList_NonEmptyList_ReturnsEqualCount()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            list.Add(new Plant("TestPlant", "Green", 1)); // Добавляем растение
-
-            // Act
-            MyList<Plant> clonedList = list.DeepCopyList(); // Клонируем список
-
-            // Assert
-            Assert.AreEqual(list.Count, clonedList.Count); // Проверяем, что размеры равны
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant", "Green", 1));
+            MyList<Plant> clonedList = list.DeepCopyList();
+            Assert.AreEqual(list.Count, clonedList.Count);
         }
 
         [TestMethod]
         public void DeepCopyList_NonEmptyList_ReturnsDifferentInstance()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            list.Add(new Plant("TestPlant", "Green", 1)); // Добавляем растение
-
-            // Act
-            MyList<Plant> clonedList = list.DeepCopyList(); // Клонируем список
-
-            // Assert
-            Assert.AreNotSame(list, clonedList); // Проверяем, что это разные объекты
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant", "Green", 1));
+            MyList<Plant> clonedList = list.DeepCopyList();
+            Assert.AreNotSame(list, clonedList);
         }
 
         [TestMethod]
         public void DeleteList_NonEmptyList_SetsCountToZero()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            list.Add(new Plant("TestPlant", "Green", 1)); // Добавляем растение
-
-            // Act
-            list.DeleteList(); // Удаляем список
-
-            // Assert
-            Assert.AreEqual(0, list.Count); // Проверяем, что счетчик обнулился
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant", "Green", 1));
+            list.DeleteList();
+            Assert.AreEqual(0, list.Count);
         }
 
         [TestMethod]
         public void DeleteList_NonEmptyList_SetsBegToNull()
         {
-            // Arrange
-            MyList<Plant> list = new MyList<Plant>(); // Пустой список
-            list.Add(new Plant("TestPlant", "Green", 1)); // Добавляем растение
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant", "Green", 1));
+            list.DeleteList();
+            Assert.IsNull(list.beg);
+        }
 
-            // Act
-            list.DeleteList(); // Удаляем список
+        [TestMethod]
+        public void Constructor_WithLength_SetsCorrectCount()
+        {
+            MyList<Plant> list = new MyList<Plant>(3);
+            Assert.AreEqual(3, list.Count);
+        }
 
-            // Assert
-            Assert.IsNull(list.beg); // Проверяем, что начало списка null
+        [TestMethod]
+        public void Constructor_WithSource_CopiesCount()
+        {
+            MyList<Plant> source = new MyList<Plant>();
+            source.Add(new Plant("TestPlant", "Green", 1));
+            MyList<Plant> list = new MyList<Plant>(source);
+            Assert.AreEqual(source.Count, list.Count);
+        }
+
+        [TestMethod]
+        public void RemoveByName_NullName_ReturnsZero()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant", "Green", 1));
+            int result = list.RemoveByName(null);
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void GetEnumerator_EmptyList_ReturnsEmpty()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            int count = 0;
+            foreach (var item in list)
+                count++;
+            Assert.AreEqual(0, count);
+        }
+
+        [TestMethod]
+        public void GetEnumerator_NonEmptyList_ReturnsCorrectCount()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant1", "Green", 1));
+            list.Add(new Plant("TestPlant2", "Red", 2));
+            int count = 0;
+            foreach (var item in list)
+                count++;
+            Assert.AreEqual(2, count);
+        }
+
+        [TestMethod]
+        public void Remove_MiddleElement_DecreasesCount()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant1", "Green", 1);
+            Plant plant2 = new Plant("TestPlant2", "Red", 2);
+            Plant plant3 = new Plant("TestPlant3", "Blue", 3);
+            list.Add(plant1);
+            list.Add(plant2);
+            list.Add(plant3);
+            list.Remove(plant2);
+            Assert.AreEqual(2, list.Count);
+        }
+
+        [TestMethod]
+        public void DeleteList_NonEmptyList_SetsEndToNull()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            list.Add(new Plant("TestPlant", "Green", 1));
+            list.DeleteList();
+            Assert.IsNull(list.end);
+        }
+
+        [TestMethod]
+        public void AddKToStart_NegativeK_KeepsCount()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            list.AddKToStart(-1);
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [TestMethod]
+        public void Remove_LastElement_DecreasesCount()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant1", "Green", 1);
+            Plant plant2 = new Plant("TestPlant2", "Red", 2);
+            list.Add(plant1);
+            list.Add(plant2);
+            list.Remove(plant2);
+            Assert.AreEqual(1, list.Count);
+        }
+
+        [TestMethod]
+        public void Add_MultipleElements_SetsNextCorrectly()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant1", "Green", 1);
+            Plant plant2 = new Plant("TestPlant2", "Red", 2);
+            list.Add(plant1);
+            list.Add(plant2);
+            Assert.IsNotNull(list.beg.Next);
+        }
+
+        [TestMethod]
+        public void Add_MultipleElements_SetsPredCorrectly()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant1", "Green", 1);
+            Plant plant2 = new Plant("TestPlant2", "Red", 2);
+            list.Add(plant1);
+            list.Add(plant2);
+            Assert.IsNotNull(list.end.Pred);
+        }
+
+        [TestMethod]
+        public void GetEnumerator_NonEmptyList_ReturnsCorrectData()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            Plant firstItem = null;
+            foreach (var item in list)
+            {
+                firstItem = item;
+                break;
+            }
+            Assert.IsNotNull(firstItem);
+        }
+
+        [TestMethod]
+        public void RemoveByName_EmptyList_ReturnsZero()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            int result = list.RemoveByName("TestPlant");
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void Add_MultipleElements_SetsEndCorrectly()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant1", "Green", 1);
+            Plant plant2 = new Plant("TestPlant2", "Red", 2);
+            list.Add(plant1);
+            list.Add(plant2);
+            Assert.IsNotNull(list.end.Data);
+        }
+
+        [TestMethod]
+        public void Remove_FirstElement_DecreasesCount()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant1", "Green", 1);
+            Plant plant2 = new Plant("TestPlant2", "Red", 2);
+            list.Add(plant1);
+            list.Add(plant2);
+            list.Remove(plant1);
+            Assert.AreEqual(1, list.Count);
+        }
+
+        [TestMethod]
+        public void Constructor_WithZeroLength_SetsCountToZero()
+        {
+            MyList<Plant> list = new MyList<Plant>(0);
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [TestMethod]
+        public void Constructor_WithEmptySource_SetsCountToZero()
+        {
+            MyList<Plant> source = new MyList<Plant>();
+            MyList<Plant> list = new MyList<Plant>(source);
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [TestMethod]
+        public void AddKToStart_SingleElement_SetsBegData()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            list.AddKToStart(1);
+            Assert.IsNotNull(list.beg.Data);
+        }
+
+        [TestMethod]
+        public void Remove_SingleElement_SetsBegToNull()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            list.Remove(plant);
+            Assert.IsNull(list.beg);
+        }
+
+        [TestMethod]
+        public void DeepCopyList_EmptyList_ReturnsEmpty()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            MyList<Plant> clonedList = list.DeepCopyList();
+            Assert.AreEqual(0, clonedList.Count);
+        }
+
+        [TestMethod]
+        public void Add_SingleElement_SetsEndData()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            Assert.IsNotNull(list.end.Data);
+        }
+
+        [TestMethod]
+        public void RemoveByName_MultipleElements_RemovesAllMatching()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant1 = new Plant("TestPlant", "Green", 1);
+            Plant plant2 = new Plant("TestPlant", "Red", 2);
+            list.Add(plant1);
+            list.Add(plant2);
+            int result = list.RemoveByName("TestPlant");
+            Assert.AreEqual(2, result);
+        }
+
+        [TestMethod]
+        public void AddKToStart_CreatesPlantType()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            list.AddKToStart(1);
+            Assert.IsTrue(list.beg.Data is Plant);
+        }
+
+        [TestMethod]
+        public void DeepCopyList_NonEmptyList_ClonesData()
+        {
+            MyList<Plant> list = new MyList<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            list.Add(plant);
+            MyList<Plant> clonedList = list.DeepCopyList();
+            Assert.AreNotSame(plant, clonedList.beg.Data);
+        }
+
+        [TestMethod]
+        public void Constructor_WithLength_CreatesPlantType()
+        {
+            MyList<Plant> list = new MyList<Plant>(1);
+            Assert.IsTrue(list.beg.Data is Plant);
         }
     }
 }

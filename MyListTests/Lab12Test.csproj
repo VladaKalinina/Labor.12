@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Downloads\Labor.10-main\Labor.10-main\Plants\Plants.csproj" />
     <ProjectReference Include="..\Lab12\Lab12.csproj" />
   </ItemGroup>
 

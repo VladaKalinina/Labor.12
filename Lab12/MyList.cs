@@ -1,9 +1,11 @@
 ﻿using Plants;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Lab12
 {
-    public class MyList<T> where T : IInit, Plants.ICloneable
+    public class MyList<T> : IEnumerable<T> where T : IInit, Plants.ICloneable
     {
         public Point<T>? beg = null; // Начало списка
         public Point<T>? end = null; // Конец списка
@@ -98,14 +100,9 @@ namespace Lab12
             return false;
         }
 
-        public void RemoveByName(string name)
+        public int RemoveByName(string name)
         {
-            if (string.IsNullOrEmpty(name)) return; // Проверяет корректность имени
-            if (count == 0)
-            {
-                Console.WriteLine("Список пуст.");
-                return;
-            }
+            if (string.IsNullOrEmpty(name)) return 0; // Проверяет корректность имени
             int removedCount = 0; // Счетчик удаленных элементов
             Point<T>? current = beg;
             while (current != null)
@@ -118,7 +115,7 @@ namespace Lab12
                 }
                 current = next;
             }
-            Console.WriteLine($"Удалено элементов: {removedCount}"); // Выводит результат
+            return removedCount; // Возвращает количество удаленных элементов
         }
 
         public void AddKToStart(int k)
@@ -150,7 +147,6 @@ namespace Lab12
                     beg = p; // Обновляет начало
                 }
                 count++; // Увеличивает счетчик
-                Console.WriteLine($"Добавлен элемент: {item}"); // Выводит добавленный элемент
             }
         }
 
@@ -164,7 +160,6 @@ namespace Lab12
                 clonedList.Add(clonedItem); // Добавляет в копию
                 current = current.Next;
             }
-            Console.WriteLine("Глубокое клонирование списка выполнено успешно.");
             return clonedList; // Возвращает копию списка
         }
 
@@ -172,7 +167,6 @@ namespace Lab12
         {
             if (beg == null)
             {
-                Console.WriteLine("Список уже удален из памяти.");
                 return;
             }
             Point<T>? current = beg;
@@ -187,7 +181,21 @@ namespace Lab12
             beg = null; // Очищает начало
             end = null; // Очищает конец
             count = 0; // Сбрасывает счетчик
-            Console.WriteLine("Список успешно удален из памяти.");
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            Point<T>? current = beg;
+            while (current != null)
+            {
+                yield return current.Data;
+                current = current.Next;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

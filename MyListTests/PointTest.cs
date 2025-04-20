@@ -1,5 +1,7 @@
 using Lab12;
 using Plants;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Lab12Test
 {
@@ -9,90 +11,135 @@ namespace Lab12Test
         [TestMethod]
         public void Constructor_NoData_SetsDataToDefault()
         {
-            // Arrange & Act
-            Point<Plant> point = new Point<Plant>(); // Создаем узел без данных
-
-            // Assert
-            Assert.IsNull(point.Data); // Проверяем, что Data равно null
+            Point<Plant> point = new Point<Plant>();
+            Assert.IsNull(point.Data);
         }
 
         [TestMethod]
         public void Constructor_WithData_SetsCorrectData()
         {
-            // Arrange
-            Plant plant = new Plant("TestPlant", "Green", 1); // Создаем тестовое растение
-
-            // Act
-            Point<Plant> point = new Point<Plant>(plant); // Создаем узел с данными
-
-            // Assert
-            Assert.AreEqual(plant, point.Data); // Проверяем, что Data содержит растение
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            Point<Plant> point = new Point<Plant>(plant);
+            Assert.AreEqual(plant.ToString(), point.Data.ToString());
         }
 
         [TestMethod]
         public void Constructor_WithData_SetsNextToNull()
         {
-            // Arrange
-            Plant plant = new Plant("TestPlant", "Green", 1); // Создаем тестовое растение
-
-            // Act
-            Point<Plant> point = new Point<Plant>(plant); // Создаем узел
-
-            // Assert
-            Assert.IsNull(point.Next); // Проверяем, что Next равно null
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            Point<Plant> point = new Point<Plant>(plant);
+            Assert.IsNull(point.Next);
         }
 
         [TestMethod]
         public void Constructor_WithData_SetsPredToNull()
         {
-            // Arrange
-            Plant plant = new Plant("TestPlant", "Green", 1); // Создаем тестовое растение
-
-            // Act
-            Point<Plant> point = new Point<Plant>(plant); // Создаем узел
-
-            // Assert
-            Assert.IsNull(point.Pred); // Проверяем, что Pred равно null
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            Point<Plant> point = new Point<Plant>(plant);
+            Assert.IsNull(point.Pred);
         }
 
         [TestMethod]
         public void MakeRandomData_PlantType_ReturnsPointWithPlant()
         {
-            // Arrange
-            Point<Plant> point = new Point<Plant>(); // Пустой узел
+            Point<Plant> point = new Point<Plant>();
+            Point<Plant> result = point.MakeRandomData();
+            Assert.IsNotNull(result.Data);
+        }
 
-            // Act
-            Point<Plant> result = point.MakeRandomData(); // Создаем случайный узел
+        [TestMethod]
+        public void MakeRandomData_ReturnsPlantType()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Point<Plant> result = point.MakeRandomData();
+            Assert.IsTrue(result.Data is Plant);
+        }
 
-            // Assert
-            Assert.IsNotNull(result.Data); // Проверяем, что Data не null
+        [TestMethod]
+        public void MakeRandomData_NonPlantType_ThrowsException()
+        {
+            Point<int> point = new Point<int>();
+            Assert.ThrowsException<InvalidOperationException>(() => point.MakeRandomData());
         }
 
         [TestMethod]
         public void MakeRandomItem_PlantType_ReturnsPlant()
         {
-            // Arrange
-            Point<Plant> point = new Point<Plant>(); // Пустой узел
+            Point<Plant> point = new Point<Plant>();
+            Plant result = point.MakeRandomItem();
+            Assert.IsNotNull(result);
+        }
 
-            // Act
-            Plant result = point.MakeRandomItem(); // Создаем случайное растение
+        [TestMethod]
+        public void MakeRandomItem_ReturnsPlantType()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Plant result = point.MakeRandomItem();
+            Assert.IsTrue(result is Plant);
+        }
 
-            // Assert
-            Assert.IsNotNull(result); // Проверяем, что возвращается растение
+        [TestMethod]
+        public void MakeRandomItem_NonPlantType_ThrowsException()
+        {
+            Point<int> point = new Point<int>();
+            Assert.ThrowsException<InvalidOperationException>(() => point.MakeRandomItem());
         }
 
         [TestMethod]
         public void ToString_WithPlantData_ReturnsPlantString()
         {
-            // Arrange
-            Plant plant = new Plant("TestPlant", "Green", 1); // Тестовое растение
-            Point<Plant> point = new Point<Plant>(plant); // Узел с данными
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            Point<Plant> point = new Point<Plant>(plant);
+            Assert.AreEqual(plant.ToString(), point.ToString());
+        }
 
-            // Act
-            string result = point.ToString(); // Получаем строковое представление
+        [TestMethod]
+        public void ToString_WithNullData_ReturnsEmptyString()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Assert.AreEqual("", point.ToString());
+        }
 
-            // Assert
-            Assert.AreEqual(plant.ToString(), result); // Проверяем строку растения
+        [TestMethod]
+        public void GetHashCode_WithPlantData_ReturnsPlantHashCode()
+        {
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            Point<Plant> point = new Point<Plant>(plant);
+            Assert.AreEqual(plant.GetHashCode(), point.GetHashCode());
+        }
+
+        [TestMethod]
+        public void GetHashCode_WithNullData_ReturnsZero()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Assert.AreEqual(0, point.GetHashCode());
+        }
+
+        [TestMethod]
+        public void Data_SetValue_UpdatesData()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Plant plant = new Plant("TestPlant", "Green", 1);
+            point.Data = plant;
+            Assert.AreEqual(plant, point.Data);
+        }
+
+        [TestMethod]
+        public void Next_SetValue_UpdatesNext()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Point<Plant> nextPoint = new Point<Plant>();
+            point.Next = nextPoint;
+            Assert.AreEqual(nextPoint, point.Next);
+        }
+
+        [TestMethod]
+        public void Pred_SetValue_UpdatesPred()
+        {
+            Point<Plant> point = new Point<Plant>();
+            Point<Plant> predPoint = new Point<Plant>();
+            point.Pred = predPoint;
+            Assert.AreEqual(predPoint, point.Pred);
         }
     }
 }
