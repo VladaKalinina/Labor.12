@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Plants;
+﻿using Plants;
 using Lab12;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lab12Test
 {
