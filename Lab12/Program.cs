@@ -7,15 +7,18 @@ namespace Lab12
     {
         static MyList<Plant> list = new MyList<Plant>(); // Двусвязный список для растений
         static MyHashTable<int, Plant> hashTable = null!; // Хеш-таблица для растений
+        static MyTree<Plant> tree = null!; // Бинарное дерево для растений
         static bool isListCreated = false; // Флаг создания списка
         static bool isHashTableCreated = false; // Флаг создания хеш-таблицы
+        static bool isTreeCreated = false; // Флаг создания дерева
 
         static void PrintMainMenu() // Выводит главное меню
         {
             Console.WriteLine("-----------------------------------ГЛАВНОЕ МЕНЮ-----------------------------------");
             Console.WriteLine("1) Работа с двусвязным списком (Задание 1)");
             Console.WriteLine("2) Работа с хеш-таблицей (Задание 2)");
-            Console.WriteLine("3) Выход");
+            Console.WriteLine("3) Работа с бинарным деревом (Задание 3)");
+            Console.WriteLine("4) Выход");
             Console.WriteLine("-----------------------------------ВЫХОД-----------------------------------");
         }
 
@@ -44,13 +47,26 @@ namespace Lab12
             Console.WriteLine("-----------------------------------НАЗАД-----------------------------------");
         }
 
+        static void PrintTreeSubMenu() // Выводит подменю для дерева
+        {
+            Console.WriteLine("-----------------------------------ПОДМЕНЮ ДЕРЕВА-----------------------------------");
+            Console.WriteLine("1) Создать идеально сбалансированное дерево");
+            Console.WriteLine("2) Вывести дерево");
+            Console.WriteLine("3) Найти среднее арифметическое высоты деревьев");
+            Console.WriteLine("4) Преобразовать в АВЛ-дерево поиска");
+            Console.WriteLine("5) Удалить элемент по имени");
+            Console.WriteLine("6) Удалить дерево из памяти");
+            Console.WriteLine("7) Вернуться в главное меню");
+            Console.WriteLine("-----------------------------------НАЗАД-----------------------------------");
+        }
+
         static void Main(string[] args) // Главный метод программы
         {
             bool exit = false;
             while (!exit)
             {
                 PrintMainMenu();
-                Console.Write("Выберите действие (1-3): ");
+                Console.Write("Выберите действие (1-4): ");
                 char choice = Console.ReadKey().KeyChar;
                 Console.WriteLine();
 
@@ -63,11 +79,14 @@ namespace Lab12
                         HandleHashTableMenu(); // Обрабатывает меню хеш-таблицы
                         break;
                     case '3':
+                        HandleTreeMenu(); // Обрабатывает меню дерева
+                        break;
+                    case '4':
                         exit = true;
                         Console.WriteLine("Программа завершена.");
                         break;
                     default:
-                        Console.WriteLine("Неверный ввод. Пожалуйста, выберите 1, 2 или 3.");
+                        Console.WriteLine("Неверный ввод. Пожалуйста, выберите 1, 2, 3 или 4.");
                         break;
                 }
                 Console.WriteLine();
@@ -173,7 +192,48 @@ namespace Lab12
             }
         }
 
-        static void CreateList() // Создаёт двусвязный список
+        static void HandleTreeMenu() // Обрабатывает подменю дерева
+        {
+            bool back = false;
+            while (!back)
+            {
+                PrintTreeSubMenu();
+                Console.Write("Выберите действие (1-7): ");
+                char choice = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                switch (choice)
+                {
+                    case '1':
+                        CreateTree();
+                        break;
+                    case '2':
+                        PrintTree();
+                        break;
+                    case '3':
+                        FindAverageAge();
+                        break;
+                    case '4':
+                        TransformToSearchTree();
+                        break;
+                    case '5':
+                        RemoveElementByName();
+                        break;
+                    case '6':
+                        DeleteTree();
+                        break;
+                    case '7':
+                        back = true;
+                        break;
+                    default:
+                        Console.WriteLine("Неверный ввод. Пожалуйста, выберите 1-7.");
+                        break;
+                }
+                Console.WriteLine();
+            }
+        }
+
+        // Методы для двусвязного списка
+        static void CreateList()
         {
             Console.WriteLine("Введите желаемую длину списка:");
             if (!int.TryParse(Console.ReadLine(), out int length) || length < 0)
@@ -188,12 +248,12 @@ namespace Lab12
                 isListCreated = true;
                 return;
             }
-            list = new MyList<Plant>(length); // Создаёт список заданной длины
+            list = new MyList<Plant>(length);
             Console.WriteLine($"Список длиной {length} успешно создан!");
             isListCreated = true;
         }
 
-        static void PrintList() // Выводит список
+        static void PrintList()
         {
             if (!isListCreated || list.Count == 0)
             {
@@ -207,7 +267,7 @@ namespace Lab12
             }
         }
 
-        static void RemoveByName() // Удаляет элементы по имени
+        static void RemoveByName()
         {
             if (!isListCreated)
             {
@@ -225,7 +285,7 @@ namespace Lab12
             Console.WriteLine($"Удалено {removed} элементов с именем '{name}'.");
         }
 
-        static void AddKToStart() // Добавляет K элементов в начало списка
+        static void AddKToStart()
         {
             if (!isListCreated)
             {
@@ -242,7 +302,7 @@ namespace Lab12
             Console.WriteLine($"Добавлено {k} элементов в начало списка.");
         }
 
-        static void DeepCopyList() // Клонирует список
+        static void DeepCopyList()
         {
             if (!isListCreated)
             {
@@ -259,7 +319,7 @@ namespace Lab12
             }
         }
 
-        static void DeleteList() // Удаляет список из памяти
+        static void DeleteList()
         {
             if (!isListCreated)
             {
@@ -271,7 +331,8 @@ namespace Lab12
             Console.WriteLine("Список успешно удалён из памяти.");
         }
 
-        static void CreateHashTable() // Создаёт хеш-таблицу
+        // Методы для хеш-таблицы
+        static void CreateHashTable()
         {
             Console.WriteLine("Введите количество объектов:");
             if (!int.TryParse(Console.ReadLine(), out int tableSize) || tableSize < 1)
@@ -299,7 +360,7 @@ namespace Lab12
             Console.WriteLine($"Хеш-таблица размером {tableSize} успешно создана!");
         }
 
-        static void PrintHashTable() // Выводит хеш-таблицу
+        static void PrintHashTable()
         {
             if (!isHashTableCreated)
             {
@@ -310,7 +371,7 @@ namespace Lab12
             hashTable.Print();
         }
 
-        static void FindElementById() // Ищет элемент по ID
+        static void FindElementById()
         {
             if (!isHashTableCreated)
             {
@@ -335,7 +396,7 @@ namespace Lab12
             }
         }
 
-        static void RemoveElementById() // Удаляет элемент по ID
+        static void RemoveElementById()
         {
             if (!isHashTableCreated)
             {
@@ -359,7 +420,7 @@ namespace Lab12
             }
         }
 
-        static void AddElementToHashTable() // Добавляет элемент в хеш-таблицу
+        static void AddElementToHashTable()
         {
             if (!isHashTableCreated)
             {
@@ -389,6 +450,109 @@ namespace Lab12
             hashTable.AddItem(newPlant.Id.Number, newPlant);
             Console.WriteLine("Элемент успешно добавлен в хеш-таблицу.");
             Console.WriteLine($"Текущая ёмкость таблицы: {hashTable.Capacity}, Количество элементов: {hashTable.Count}");
+        }
+
+        // Методы для бинарного дерева
+        static void CreateTree()
+        {
+            Console.WriteLine("Введите количество объектов для дерева:");
+            if (!int.TryParse(Console.ReadLine(), out int size) || size < 1)
+            {
+                Console.WriteLine("Некорректный ввод размера.");
+                return;
+            }
+            Random rnd = new Random();
+            Plant[] plants = new Plant[size];
+            for (int i = 0; i < size; i++)
+            {
+                int objectType = rnd.Next(1, 5);
+                plants[i] = objectType switch
+                {
+                    1 => new Plant(),
+                    2 => new Tree(),
+                    3 => new Flower(),
+                    4 => new Rose(),
+                    _ => new Plant()
+                };
+                plants[i].RandomInit();
+            }
+            tree = new MyTree<Plant>(plants);
+            isTreeCreated = true;
+            Console.WriteLine($"Идеально сбалансированное дерево размером {size} успешно создано!");
+        }
+
+        static void PrintTree()
+        {
+            if (!isTreeCreated || tree.Count == 0)
+            {
+                Console.WriteLine("Дерево пусто или не создано.");
+                return;
+            }
+            Console.WriteLine("Содержимое дерева:");
+            tree.ShowTree();
+        }
+
+        static void FindAverageAge()
+        {
+            if (!isTreeCreated || tree.Count == 0)
+            {
+                Console.WriteLine("Дерево пусто или не создано.");
+                return;
+            }
+            double average = tree.FindAverageAge();
+            Console.WriteLine($"Среднее арифметическое высоты деревьев: {average:F2} м");
+        }
+
+        static void TransformToSearchTree()
+        {
+            if (!isTreeCreated || tree.Count == 0)
+            {
+                Console.WriteLine("Дерево пусто или не создано.");
+                return;
+            }
+            MyTree<Plant> searchTree = tree.TransformToSearchTree();
+            Console.WriteLine("Исходное дерево:");
+            tree.ShowTree();
+            Console.WriteLine("АВЛ-дерево поиска:");
+            searchTree.ShowTree();
+        }
+
+        static void RemoveElementByName()
+        {
+            if (!isTreeCreated || tree.Count == 0)
+            {
+                Console.WriteLine("Дерево пусто или не создано.");
+                return;
+            }
+            Console.WriteLine("Введите имя растения для удаления:");
+            string name = Console.ReadLine();
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("Некорректный ввод имени.");
+                return;
+            }
+            Plant dummyPlant = new Plant { Name = name };
+            bool removed = tree.RemoveByKey(dummyPlant);
+            if (removed)
+            {
+                Console.WriteLine($"Элемент с именем '{name}' успешно удалён.");
+            }
+            else
+            {
+                Console.WriteLine($"Элемент с именем '{name}' не найден.");
+            }
+        }
+
+        static void DeleteTree()
+        {
+            if (!isTreeCreated)
+            {
+                Console.WriteLine("Дерево не создано.");
+                return;
+            }
+            tree.DeleteTree();
+            isTreeCreated = false;
+            Console.WriteLine("Дерево успешно удалено из памяти.");
         }
     }
 }
