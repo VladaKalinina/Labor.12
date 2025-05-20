@@ -1,4 +1,3 @@
-// Импорт необходимых пространств имен
 using Plants;
 using Lab12;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
